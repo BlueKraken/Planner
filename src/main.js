@@ -1,4 +1,4 @@
-import { myfunction } from 'someModule.js';
+import { myfunction } from './someModule.js';
 
 
 myfunction()
