@@ -1,0 +1,7 @@
+#califications-container .grid-container {
+    grid-template-columns: max-content max-content max-content;
+}
+
+#califications-container input[type="number"] {
+    width: 40;
+}

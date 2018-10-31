@@ -1,0 +1,47 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <title>Mi bello sitio</title>
+  <script src="main.js" type="module"></script>
+  <link href="main.css" rel="stylesheet">
+  <link href="califications.css" rel="stylesheet">
+</head>
+<body>
+  <div id="app">
+
+    <div id="todo-list-container">
+      <label for="item-name">Nombre</label>
+          
+      <input id="new-todo-input" type="text" name="item-name" onkeyup="handleNameInputChange()">
+      
+      <button onclick="onAddTodoClick()">Add</button>
+      
+      <ul id="todo-list"></ul>
+      
+      <button onclick="onDeleteSelectedClick()">Delete selected</button>
+    </div>
+
+    <div id="califications-container">
+      <button onclick="onAddCalificationClick()">Agregar nota</button>
+      <div class="grid-container">
+          <!-- grid header -->
+          <div class="grid-item grid-header">Peso</div>
+          <div class="grid-item grid-header">Nota</div>
+          <div class="grid-item grid-header">Opciones</div>
+      </div>
+
+      <label for="exam-weight">Peso examen</label>
+      <input type="number" min="0" name="exam-weigth" oninput="setExamWeight(this.value)"> 
+      
+      <label for="exam-score">Nota examen</label>
+      <input type="number" min="0" name="exam-score" step="0.1" oninput="setExamScore(this.value)">
+      
+      <p>Nota presentación: <small id='presentation-score'></small></p>
+      <p>Nota final: <small id='total-score'></small></p>
+    </div>
+  </div>
+</body>
+</html>
