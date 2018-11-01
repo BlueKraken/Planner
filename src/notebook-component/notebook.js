@@ -1,4 +1,6 @@
 import { Calification } from './calification.js'
+import { markup, calificationRow } from './view.js';
+import { render } from '../../node_modules/lit-html/lit-html.js';
 
 const notebook = {
   califications: [
@@ -62,6 +64,21 @@ export const notebookViewModel = {
     this.renderTotals();
   },
 
+  renderCalifications() {  
+    const calificationsGridContainer = this.parentContainer
+    .querySelector('.grid-container');
+
+    calificationsGridContainer
+    .querySelectorAll(':not(.grid-header)')
+    .forEach(e => e.remove());
+    
+    this.califications.forEach((_c, i) => {
+        calificationRow(i).forEach(col => {
+            calificationsGridContainer.appendChild(col);
+        });
+    });
+  },
+
   renderTotals() {
     this.renderPresentationScore();
     this.renderTotalScore();
@@ -75,7 +92,14 @@ export const notebookViewModel = {
   renderPresentationScore() {
     parentContainer.querySelector('#presentation-score').innerText = 
     notebookViewModel.presentation.score.toFixed(3);
+  },
+
+  init() {
+    render(markup, this.parentContainer);
+    this.renderCalifications();
   }
 }
+
+window.notebookViewModel = notebookViewModel;
 
 window.printState = () => console.log(notebook);

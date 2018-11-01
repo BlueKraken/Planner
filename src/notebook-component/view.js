@@ -1,20 +1,4 @@
-import { notebookViewModel } from './notebook.js';
-import { html, render } from '../../node_modules/lit-html/lit-html.js';
-
-const calificationsGridContainer = () => 
-   notebookViewModel.parentContainer.querySelector('.grid-container');
-
-const renderCalifications = () => {  
-    calificationsGridContainer()
-    .querySelectorAll(':not(.grid-header)')
-    .forEach(e => e.remove());
-    
-    notebookViewModel.califications.forEach((_c, i) => {
-        calificationRow(i).forEach(col => {
-            calificationsGridContainer().appendChild(col);
-        });
-    });
-}
+import { html } from '../../node_modules/lit-html/lit-html.js';
 
 const gridHeader = html`
 <div class="grid-item grid-header">Peso</div>
@@ -22,8 +6,8 @@ const gridHeader = html`
 <div class="grid-item grid-header">Opciones</div>
 `
 
-const markup = html`
-<button onclick="notebookViewModel.addCalification()">
+export const markup = html`
+<button onclick="notebookViewModel.addCalification()}">
 Agregar nota
 </button>
 
@@ -57,7 +41,7 @@ oninput="notebookViewModel.examScore(this.value)">
 </p>
 `
 
-const calificationRow = key => {
+export const calificationRow = key => {
     const calification = notebookViewModel.califications[key];
     
     const weightInputEl = document.createElement('input');
@@ -91,9 +75,4 @@ const calificationRow = key => {
         scoreInputEl,
         deleteButtonEl,
     ];
-}
-
-export function init() {
-    render(markup, notebookViewModel.parentContainer);
-    renderCalifications();
 }
