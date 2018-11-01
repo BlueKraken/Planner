@@ -1,3 +1,3 @@
-import { notebookViewModel } from './notebook.js';
+import { init } from './viewModel.js';
 
-document.addEventListener('DOMContentLoaded', notebookViewModel.init);
+document.addEventListener('DOMContentLoaded', init);
