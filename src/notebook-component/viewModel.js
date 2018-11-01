@@ -71,6 +71,8 @@ export function init() {
     renderCalifications();
 }
 
+// ----------
+// Markup and html elements
 const gridHeader = html`
 <div class="grid-item grid-header">Peso</div>
 <div class="grid-item grid-header">Nota</div>
@@ -79,36 +81,36 @@ const gridHeader = html`
 
 const markup = html`
 <button @click="${addCalification}">
-Agregar nota
+    Agregar nota
 </button>
 
 <div class="grid-container">
-${gridHeader}
+    ${gridHeader}
 </div>
 
 <label for="exam-weight">Peso examen</label>
 <input 
-type="number"
-min="0" 
-name="exam-weigth" 
-value="${notebook.exam.weight}" 
-@input="${setExamWeight}"> 
+    type="number"
+    min="0" 
+    name="exam-weigth" 
+    value="${notebook.exam.weight}" 
+    @input="${setExamWeight}"> 
 
 <label for="exam-score">Nota examen</label>
 <input 
-type="number" 
-min="0" 
-name="exam-score" 
-value="${notebook.exam.score}"
-step="0.1" 
-@input="${setExamScore}">
+    type="number" 
+    min="0" 
+    name="exam-score" 
+    value="${notebook.exam.score}"
+    step="0.1" 
+    @input="${setExamScore}">
 
 <p>Nota presentación: 
-<small id='presentation-score'>${notebook.presentation.score}</small>
+    <small id='presentation-score'>${notebook.presentation.score}</small>
 </p>
 
 <p>Nota final: 
-<small id='total-score'>${notebook.totalScore}</small>
+    <small id='total-score'>${notebook.totalScore}</small>
 </p>
 `
 
