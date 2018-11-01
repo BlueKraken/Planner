@@ -1,10 +1,9 @@
 import { Calification } from './calification.js'
-import { html, render } from '../../node_modules/lit-html/lit-html.js';
 
 const notebook = {
   califications: [
-    new Calification(),
-    new Calification()
+    new Calification(50, 6),
+    new Calification(50, 4)
   ],
   exam: new Calification(),
   get presentation() {
@@ -20,139 +19,63 @@ const notebook = {
   }
 }
 
-window.setExamScore = value => {
-  notebook.exam.score = value * 1;
-  renderTotalScore();
-}
+export const notebookViewModel = {
+  parentContainer: document.getElementById(
+    'califications-container'),
 
-window.setExamWeight = value => {
-  notebook.exam.weight = value * 1;
-  renderTotalScore();
-}
-
-window.onAddCalificationClick = () => {
-  notebook.califications.push(new Calification());
-  renderCalifications();
-}
-
-const init = () => {
-  render(
-    markup(notebook), 
-    document.getElementById('califications-container'));
-  renderCalifications();
-  renderTotals();
-}
-
-const calificationsGridContainer = () => 
-  document.querySelector('#califications-container .grid-container');
-
-const renderTotalScore = () => {
-  document.getElementById('total-score').innerText =
-  notebook.totalScore.toFixed(3);
-}
-
-const renderCalifications = () => {  
-  calificationsGridContainer()
-  .querySelectorAll(':not(.grid-header)')
-  .forEach(e => e.remove());
+  set examScore(value) {
+    notebook.exam.score = value * 1;
+    renderTotalScore();
+  },
   
-  notebook.califications.forEach((_c, i) => {
-    calificationRow(notebook, i).forEach(col => {
-      calificationsGridContainer().appendChild(col);
-    });
-  });
-}
-
-function renderTotals() {
-  renderPresentationScore();
-  renderTotalScore();
-}
-
-const renderPresentationScore = () => {
-  document.getElementById('presentation-score').innerText = 
-  notebook.presentation.score.toFixed(3);
-}
-
-const gridHeader = html`
-<div class="grid-item grid-header">Peso</div>
-<div class="grid-item grid-header">Nota</div>
-<div class="grid-item grid-header">Opciones</div>
-`
-
-const markup = state => html`
-<button onclick="onAddCalificationClick()">
-Agregar nota
-</button>
-
-<div class="grid-container">
-${gridHeader}
-</div>
-
-<label for="exam-weight">Peso examen</label>
-<input 
-type="number"
-min="0" 
-name="exam-weigth" 
-value="${state.exam.weight}" 
-oninput="setExamWeight(this.value)"> 
-
-<label for="exam-score">Nota examen</label>
-<input 
-type="number" 
-min="0" 
-name="exam-score" 
-value="${state.exam.score}"
-step="0.1" 
-oninput="setExamScore(this.value)">
-
-<p>Nota presentación: 
-<small id='presentation-score'>${state.presentation.score}</small>
-</p>
-
-<p>Nota final: 
-<small id='total-score'>${state.totalScore}</small>
-</p>
-`
-
-const calificationRow = (state, key) => {
-  const calification = state.califications[key];
+  set examWeight(value) {
+    notebook.exam.weight = value * 1;
+    renderTotalScore();
+  },
   
-  const weightInputEl = document.createElement('input');
-  weightInputEl.classList.add('grid-item');
-  weightInputEl.setAttribute('type', 'number');
-  weightInputEl.setAttribute('min', '0');  
-  weightInputEl.setAttribute('value', calification.weight);
-  weightInputEl.addEventListener('input', _ => {
-    state.califications[key].weight = weightInputEl.value * 1;
-    renderTotals();
-  });
+  get califications() { return notebook.califications; },
   
-  const scoreInputEl = document.createElement('input');
-  scoreInputEl.classList.add('grid-item');
-  scoreInputEl.setAttribute('type', 'number');
-  scoreInputEl.setAttribute('min', '0');
-  scoreInputEl.setAttribute('step', '0.1');
-  scoreInputEl.setAttribute('value', calification.score);
-  scoreInputEl.addEventListener('input', _ => {
-    state.califications[key].score = scoreInputEl.value * 1;
-    renderTotals();
-  });
+  get exam() { return notebook.exam; },
   
-  const deleteButtonEl = document.createElement('button');
-  deleteButtonEl.classList.add('grid-item');
-  deleteButtonEl.textContent = 'Eliminar';
-  deleteButtonEl.onclick = _ => {
+  get presentation() { return notebook.presentation; },
+  
+  get totalScore() { return notebook.totalScore; },
+  
+  addCalification() {
+    notebook.califications.push(new Calification());
+    this.renderCalifications();
+  },
+  
+  changeCalificationWeight(key, value) {
+    notebook.califications[key].weight = value * 1;
+    this.renderTotals();
+  },
+  
+  changeCalificationScore(key, value) {
+    notebook.califications[key].score = value * 1;
+    this.renderTotals();
+  },
+  
+  deleteCalification(key) {
     state.califications.splice(key, 1);
-    renderCalifications();
-    renderTotals();
+    this.renderCalifications();
+    this.renderTotals();
+  },
+
+  renderTotals() {
+    this.renderPresentationScore();
+    this.renderTotalScore();
+  },
+  
+  renderTotalScore () {
+    parentContainer.querySelector('#total-score').innerText =
+    notebookViewModel.totalScore.toFixed(3);
+  },
+  
+  renderPresentationScore() {
+    parentContainer.querySelector('#presentation-score').innerText = 
+    notebookViewModel.presentation.score.toFixed(3);
   }
-  
-  return [
-    weightInputEl,
-    scoreInputEl,
-    deleteButtonEl,
-  ];
 }
-  
+
 window.printState = () => console.log(notebook);
-document.addEventListener('DOMContentLoaded', init)
