@@ -86,18 +86,8 @@ const onEditClick = (key) => {
   }
 }
 
-/**
- * Califications grid
- */
-import { initCalificationsGrid, onAddCalificationClick, setExamScore, setExamWeight } from './califications.js';
-
-window.onAddCalificationClick = () => { onAddCalificationClick() };
-window.setExamScore = setExamScore;
-window.setExamWeight = setExamWeight;
-
 const initialize = () => {
   renderList();
-  initCalificationsGrid();
 }
 
 document.addEventListener('DOMContentLoaded', initialize)

@@ -6,6 +6,7 @@
 
   <title>Mi bello sitio</title>
   <script src="main.js" type="module"></script>
+  <script src="notebook-component/notebook.js" type="module"></script>
   <link href="main.css" rel="stylesheet">
   <link href="califications.css" rel="stylesheet">
 </head>
@@ -24,19 +25,7 @@
       <button onclick="onDeleteSelectedClick()">Delete selected</button>
     </div>
 
-    <div id="califications-container">
-      <button onclick="onAddCalificationClick()">Agregar nota</button>
-      <div class="grid-container"></div>
-
-      <label for="exam-weight">Peso examen</label>
-      <input type="number" min="0" name="exam-weigth" oninput="setExamWeight(this.value)"> 
-      
-      <label for="exam-score">Nota examen</label>
-      <input type="number" min="0" name="exam-score" step="0.1" oninput="setExamScore(this.value)">
-      
-      <p>Nota presentación: <small id='presentation-score'></small></p>
-      <p>Nota final: <small id='total-score'></small></p>
-    </div>
+    <div id="califications-container"></div>
   </div>
 </body>
 </html>
