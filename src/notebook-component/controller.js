@@ -71,6 +71,9 @@ class NotebookController {
     }
 
     init() {
+        this.parentContainer = document.createElement('div');
+        this.parentContainer.classList.add('califications-container');
+        document.body.appendChild(this.parentContainer);
         render(markup, this.parentContainer);
         this.renderCalifications();
     }
