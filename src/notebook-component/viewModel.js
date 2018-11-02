@@ -1,75 +1,82 @@
 import { Calification } from './calification.js';
-import { notebook } from './notebook.js';
+import { Notebook } from './notebook.js';
 import { html, render } from '../../node_modules/lit-html/lit-html.js';
 
-const parentContainer = document.querySelector(
-    '#califications-container');
+class NotebookController {
+    constructor() {
+        this.notebook = new Notebook();
+        this.parentContainer = document.querySelector(
+            '#califications-container');
+    }
+        
+    setExamScore(event) {
+        this.notebook.exam.score = event.target.value * 1;
+        this.renderTotalScore();
+    }
 
-function setExamScore(event) {
-    notebook.exam.score = event.target.value * 1;
-    renderTotalScore();
-}
+    setExamWeight(event) {
+        this.notebook.exam.weight = event.target.value * 1;
+        renderTotalScore();
+    }
 
-function setExamWeight(event) {
-    notebook.exam.weight = event.target.value * 1;
-    renderTotalScore();
-}
+    addCalification() {
+        this.notebook.califications.push(new Calification());
+        this.renderCalifications();
+    }
 
-function addCalification() {
-    notebook.califications.push(new Calification());
-    renderCalifications();
-}
+    changeCalificationWeight(key, value) {
+        this.notebook.califications[key].weight = value * 1;
+        this.renderTotals();
+    }
 
-function changeCalificationWeight(key, value) {
-    notebook.califications[key].weight = value * 1;
-    renderTotals();
-}
+    changeCalificationScore(key, value) {
+        this.notebook.califications[key].score = value * 1;
+        this.renderTotals();
+    }
 
-function changeCalificationScore(key, value) {
-    notebook.califications[key].score = value * 1;
-    renderTotals();
-}
+    deleteCalification(key) {
+        this.notebook.califications.splice(key, 1);
+        this.renderCalifications();
+        this.renderTotals();
+    }
 
-function deleteCalification(key) {
-    notebook.califications.splice(key, 1);
-    renderCalifications();
-    renderTotals();
-}
-
-function renderCalifications() {  
-    const calificationsGridContainer = parentContainer
-    .querySelector('.grid-container');
-
-    calificationsGridContainer
-    .querySelectorAll(':not(.grid-header)')
-    .forEach(e => e.remove());
-    
-    notebook.califications.forEach((_c, i) => {
-        calificationRow(i).forEach(col => {
-            calificationsGridContainer.appendChild(col);
+    renderCalifications() {  
+        const calificationsGridContainer = this.parentContainer
+        .querySelector('.grid-container');
+        
+        calificationsGridContainer
+        .querySelectorAll(':not(.grid-header)')
+        .forEach(e => e.remove());
+        
+        this.notebook.califications.forEach((_c, i) => {
+            calificationRow(i).forEach(col => {
+                calificationsGridContainer.appendChild(col);
+            });
         });
-    });
+    }
+
+    renderTotals() {
+        this.renderPresentationScore();
+        this.renderTotalScore();
+    }
+
+    renderTotalScore () {
+        this.parentContainer.querySelector('#total-score').innerText =
+        this.notebook.totalScore.toFixed(3);
+    }
+
+    renderPresentationScore() {
+        this.parentContainer.querySelector('#presentation-score').innerText = 
+        this.notebook.presentation.score.toFixed(3);
+    }
+
+    init() {
+        render(markup, this.parentContainer);
+        this.renderCalifications();
+    }
 }
 
-function renderTotals() {
-    renderPresentationScore();
-    renderTotalScore();
-}
-
-function renderTotalScore () {
-    parentContainer.querySelector('#total-score').innerText =
-    notebook.totalScore.toFixed(3);
-}
-
-function renderPresentationScore() {
-    parentContainer.querySelector('#presentation-score').innerText = 
-    notebook.presentation.score.toFixed(3);
-}
-
-export function init() {
-    render(markup, parentContainer);
-    renderCalifications();
-}
+export const initNotebook = new NotebookController().init;
 
 // ----------
 // Markup and html elements
@@ -80,7 +87,7 @@ const gridHeader = html`
 `
 
 const markup = html`
-<button @click="${addCalification}">
+<button @click="${() => controller.addCalification()}">
     Agregar nota
 </button>
 
@@ -93,29 +100,33 @@ const markup = html`
     type="number"
     min="0" 
     name="exam-weigth" 
-    value="${notebook.exam.weight}" 
-    @input="${setExamWeight}"> 
+    value="${controller.notebook.exam.weight}" 
+    @input="${e => controller.setExamWeight(e)}"> 
 
 <label for="exam-score">Nota examen</label>
 <input 
     type="number" 
     min="0" 
     name="exam-score" 
-    value="${notebook.exam.score}"
+    value="${controller.notebook.exam.score}"
     step="0.1" 
-    @input="${setExamScore}">
+    @input="${e => controller.setExamScore(e)}">
 
 <p>Nota presentación: 
-    <small id='presentation-score'>${notebook.presentation.score}</small>
+    <small id='presentation-score'>
+        ${controller.notebook.presentation.score}
+    </small>
 </p>
 
 <p>Nota final: 
-    <small id='total-score'>${notebook.totalScore}</small>
+    <small id='total-score'>
+        ${controller.notebook.totalScore}
+    </small>
 </p>
 `
 
 const calificationRow = key => {
-    const calification = notebook.califications[key];
+    const calification = controller.notebook.califications[key];
     
     const weightInputEl = document.createElement('input');
     weightInputEl.classList.add('grid-item');
@@ -123,7 +134,7 @@ const calificationRow = key => {
     weightInputEl.setAttribute('min', '0');  
     weightInputEl.setAttribute('value', calification.weight);
     weightInputEl.addEventListener('input', _ => {
-        changeCalificationWeight(key, weightInputEl.value);
+        controller.changeCalificationWeight(key, weightInputEl.value);
     });
     
     const scoreInputEl = document.createElement('input');
@@ -133,14 +144,14 @@ const calificationRow = key => {
     scoreInputEl.setAttribute('step', '0.1');
     scoreInputEl.setAttribute('value', calification.score);
     scoreInputEl.addEventListener('input', _ => {
-        changeCalificationScore(key, scoreInputEl.value);
+        controller.changeCalificationScore(key, scoreInputEl.value);
     });
     
     const deleteButtonEl = document.createElement('button');
     deleteButtonEl.classList.add('grid-item');
     deleteButtonEl.textContent = 'Eliminar';
     deleteButtonEl.onclick = _ => {
-        deleteCalification(key)
+        controller.deleteCalification(key)
     }
     
     return [
