@@ -107,13 +107,15 @@ const markup = html`
     type="number"
     min="0" 
     name="exam-weigth" 
+    max="100"
     value="${controller.notebook.exam.weight}" 
     @input="${controller.setExamWeight.bind(controller)}"> 
 
 <label for="exam-score">Nota examen</label>
 <input 
     type="number" 
-    min="0" 
+    min="0"
+    max="7" 
     name="exam-score" 
     value="${controller.notebook.exam.score}"
     step="0.1" 
@@ -138,7 +140,8 @@ const calificationRow = key => {
     const weightInputEl = document.createElement('input');
     weightInputEl.classList.add('grid-item');
     weightInputEl.setAttribute('type', 'number');
-    weightInputEl.setAttribute('min', '0');  
+    weightInputEl.setAttribute('min', '0');
+    weightInputEl.setAttribute('max', '100');
     weightInputEl.setAttribute('value', calification.weight);
     weightInputEl.addEventListener('input', _ => {
         controller.changeCalificationWeight(key, weightInputEl.value);
@@ -148,6 +151,7 @@ const calificationRow = key => {
     scoreInputEl.classList.add('grid-item');
     scoreInputEl.setAttribute('type', 'number');
     scoreInputEl.setAttribute('min', '0');
+    scoreInputEl.setAttribute('max', '7');
     scoreInputEl.setAttribute('step', '0.1');
     scoreInputEl.setAttribute('value', calification.score);
     scoreInputEl.addEventListener('input', _ => {
