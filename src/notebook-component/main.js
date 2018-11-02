@@ -1,3 +1,3 @@
-import { init } from './viewModel.js';
+import { controller } from './viewModel.js';
 
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', _ => controller.init());

@@ -1,0 +1,32 @@
+<button onclick="notebookViewModel.addCalification()">
+    Agregar nota
+</button>
+
+<div class="grid-container">
+    ${gridHeader}
+</div>
+
+<label for="exam-weight">Peso examen</label>
+<input 
+    type="number"
+    min="0" 
+    name="exam-weigth" 
+    value="${notebookViewModel.exam.weight}" 
+    oninput="notebookViewModel.examWeight(this.value)"> 
+
+<label for="exam-score">Nota examen</label>
+<input 
+type="number" 
+min="0" 
+name="exam-score" 
+value="${notebookViewModel.exam.score}"
+step="0.1" 
+oninput="notebookViewModel.examScore(this.value)">
+
+<p>Nota presentación: 
+    <small id='presentation-score'>${notebookViewModel.presentation.score}</small>
+</p>
+
+<p>Nota final: 
+    <small id='total-score'>${notebookViewModel.totalScore}</small>
+</p>
