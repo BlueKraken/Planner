@@ -1,3 +1,3 @@
-import { initNotebook } from './viewModel.js';
+import { initNotebook } from './controller.js';
 
-document.addEventListener('DOMContentLoaded', _ => initNotebook());
+document.addEventListener('DOMContentLoaded', () => initNotebook());
