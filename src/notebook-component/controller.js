@@ -25,13 +25,11 @@ class NotebookController {
     }
 
     changeCalificationWeight(key, value) {
-        console.log([this, key, value]);
         this.notebook.califications[key].weight = value * 1;
         this.renderTotals();
     }
 
     changeCalificationScore(key, value) {
-        console.log([this, key, value]);
         this.notebook.califications[key].score = value * 1;
         this.renderTotals();
     }

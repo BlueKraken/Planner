@@ -1,3 +1,3 @@
 import { initNotebook } from './controller.js';
 
-document.addEventListener('DOMContentLoaded', () => initNotebook());
+document.addEventListener('DOMContentLoaded', initNotebook);
