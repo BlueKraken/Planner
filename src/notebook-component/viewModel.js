@@ -16,7 +16,7 @@ class NotebookController {
 
     setExamWeight(event) {
         this.notebook.exam.weight = event.target.value * 1;
-        renderTotalScore();
+        this.renderTotalScore();
     }
 
     addCalification() {
@@ -25,11 +25,13 @@ class NotebookController {
     }
 
     changeCalificationWeight(key, value) {
+        console.log([this, key, value]);
         this.notebook.califications[key].weight = value * 1;
         this.renderTotals();
     }
 
     changeCalificationScore(key, value) {
+        console.log([this, key, value]);
         this.notebook.califications[key].score = value * 1;
         this.renderTotals();
     }
@@ -76,7 +78,14 @@ class NotebookController {
     }
 }
 
-export const initNotebook = new NotebookController().init;
+const controller = new NotebookController();
+
+// Al exportar sólo la función, esta pierde 'this', o es
+// asignado a un scope mayor (como window). Por lo que se
+// bindea la functión a controller, definiendo así el
+// 'this' correcto y de manera permanente.
+// (También se usó en los templates)
+export const initNotebook = controller.init.bind(controller);
 
 // ----------
 // Markup and html elements
@@ -87,7 +96,7 @@ const gridHeader = html`
 `
 
 const markup = html`
-<button @click="${() => controller.addCalification()}">
+<button @click="${controller.addCalification.bind(controller)}">
     Agregar nota
 </button>
 
@@ -101,7 +110,7 @@ const markup = html`
     min="0" 
     name="exam-weigth" 
     value="${controller.notebook.exam.weight}" 
-    @input="${e => controller.setExamWeight(e)}"> 
+    @input="${controller.setExamWeight.bind(controller)}"> 
 
 <label for="exam-score">Nota examen</label>
 <input 
@@ -110,7 +119,7 @@ const markup = html`
     name="exam-score" 
     value="${controller.notebook.exam.score}"
     step="0.1" 
-    @input="${e => controller.setExamScore(e)}">
+    @input="${controller.setExamScore.bind(controller)}">
 
 <p>Nota presentación: 
     <small id='presentation-score'>
@@ -150,9 +159,7 @@ const calificationRow = key => {
     const deleteButtonEl = document.createElement('button');
     deleteButtonEl.classList.add('grid-item');
     deleteButtonEl.textContent = 'Eliminar';
-    deleteButtonEl.onclick = _ => {
-        controller.deleteCalification(key)
-    }
+    deleteButtonEl.onclick = controller.deleteCalification.bind(controller)
     
     return [
         weightInputEl,
