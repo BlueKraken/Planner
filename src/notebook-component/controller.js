@@ -8,36 +8,42 @@ class NotebookController {
         this.parentContainer = document.querySelector(
             '#califications-container');
     }
-        
+
     setExamScore(event) {
         this.notebook.exam.score = event.target.value * 1;
         this.renderTotalScore();
+        this.saveNotebook();
     }
 
     setExamWeight(event) {
         this.notebook.exam.weight = event.target.value * 1;
         this.renderTotalScore();
+        this.saveNotebook();
     }
 
     addCalification() {
         this.notebook.califications.push(new Calification());
         this.renderCalifications();
+        this.saveNotebook();
     }
 
     changeCalificationWeight(key, value) {
         this.notebook.califications[key].weight = value * 1;
         this.renderTotals();
+        this.saveNotebook();
     }
 
     changeCalificationScore(key, value) {
         this.notebook.califications[key].score = value * 1;
         this.renderTotals();
+        this.saveNotebook();
     }
 
     deleteCalification(key) {
         this.notebook.califications.splice(key, 1);
         this.renderCalifications();
         this.renderTotals();
+        this.saveNotebook();
     }
 
     renderCalifications() {  
@@ -70,6 +76,10 @@ class NotebookController {
         this.notebook.presentation.score.toFixed(3);
     }
 
+    saveNotebook() {
+        localStorage.setItem('notebook', JSON.stringify(this.notebook));
+    }
+
     init() {
         const styleRef = document.createElement('link');
         styleRef.setAttribute('href', 'notebook-component/notebook.css');
@@ -81,7 +91,7 @@ class NotebookController {
         document.head.appendChild(styleRef);
 
         document.body.appendChild(this.parentContainer);
-        render(markup, this.parentContainer);
+        render(markup(), this.parentContainer);
         this.renderCalifications();
     }
 
@@ -91,14 +101,7 @@ class NotebookController {
     }
 }
 
-const controller = new NotebookController();
-
-// Al exportar sólo la función, esta pierde 'this', o es
-// asignado a un scope mayor (como window). Por lo que se
-// bindea la functión a controller, definiendo así el
-// 'this' correcto y de manera permanente.
-// (También se usó en los templates)
-export const initNotebook = controller.init.bind(controller);
+export const controller = new NotebookController();
 
 // ----------
 // Markup and html elements
@@ -109,7 +112,7 @@ const gridHeader = html`
 <div class="grid-item grid-header">Opciones</div>
 `
 
-const markup = html`
+const markup = () => html`
 <button @click="${controller.addCalification.bind(controller)}">
     Agregar nota
 </button>
