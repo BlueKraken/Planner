@@ -1,3 +1,18 @@
-import { initNotebook } from './controller.js';
+import { controller } from './controller.js';
+import { Notebook } from './notebook.js';
+import { Calification } from './calification.js';
 
-document.addEventListener('DOMContentLoaded', initNotebook);
+const notebookData = JSON.parse(localStorage.getItem('notebook'));
+
+console.log(notebookData);
+
+if (notebookData) {   
+    if (Array.isArray(notebookData.califications)) {
+        controller.notebook.califications = notebookData.califications.map(
+            c => new Calification(c.weight, c.score))
+    }
+    const examData = notebookData.exam;
+    controller.notebook.exam = new Calification(examData.weight, examData.score)
+}
+    
+document.addEventListener('DOMContentLoaded', controller.init.bind(controller));

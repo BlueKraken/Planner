@@ -8,7 +8,7 @@ class NotebookController {
         this.parentContainer = document.querySelector(
             '#califications-container');
     }
-        
+
     setExamScore(event) {
         this.notebook.exam.score = event.target.value * 1;
         this.renderTotalScore();
@@ -81,7 +81,7 @@ class NotebookController {
         document.head.appendChild(styleRef);
 
         document.body.appendChild(this.parentContainer);
-        render(markup, this.parentContainer);
+        render(markup(), this.parentContainer);
         this.renderCalifications();
     }
 
@@ -91,14 +91,7 @@ class NotebookController {
     }
 }
 
-const controller = new NotebookController();
-
-// Al exportar sólo la función, esta pierde 'this', o es
-// asignado a un scope mayor (como window). Por lo que se
-// bindea la functión a controller, definiendo así el
-// 'this' correcto y de manera permanente.
-// (También se usó en los templates)
-export const initNotebook = controller.init.bind(controller);
+export const controller = new NotebookController();
 
 // ----------
 // Markup and html elements
@@ -109,7 +102,7 @@ const gridHeader = html`
 <div class="grid-item grid-header">Opciones</div>
 `
 
-const markup = html`
+const markup = () => html`
 <button @click="${controller.addCalification.bind(controller)}">
     Agregar nota
 </button>
