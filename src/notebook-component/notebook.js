@@ -3,7 +3,7 @@ import { Calification } from './calification.js'
 
 export class Notebook {
   constructor() {
-    this.califications = [new Calification(100, 7)];
+    this.califications = [];
     this.exam = new Calification();
   }
 
@@ -11,7 +11,7 @@ export class Notebook {
     const weight = 100 - this.exam.weight;
     const score = this.califications
     .map(c => c.weightedScore)
-    .reduce((total, current) => total += current);
+    .reduce((total, current) => total += current, 0);
     
     return new Calification(weight, score);
   }
