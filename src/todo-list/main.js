@@ -1,5 +1,5 @@
 // TODO: wire markup
-
+// TODO: apply styles
 /**
  * Todo list
  */
