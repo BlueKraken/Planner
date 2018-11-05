@@ -71,11 +71,24 @@ class NotebookController {
     }
 
     init() {
+        // <link href="main.css" rel="stylesheet"></link>
+        const styleRef = document.createElement('link');
+        styleRef.setAttribute('href', 'califications.css');
+        styleRef.setAttribute('rel', 'stylesheet');
+
         this.parentContainer = document.createElement('div');
-        this.parentContainer.classList.add('califications-container');
+        this.parentContainer.id = 'califications-container';
+
+        document.head.appendChild(styleRef);
+
         document.body.appendChild(this.parentContainer);
         render(markup, this.parentContainer);
         this.renderCalifications();
+    }
+
+    destroy() {
+        document.head.querySelector('[href="califications.css"]').remove();
+        this.parentContainer.remove();
     }
 }
 
@@ -90,6 +103,7 @@ export const initNotebook = controller.init.bind(controller);
 
 // ----------
 // Markup and html elements
+// TODO: extract to file
 const gridHeader = html`
 <div class="grid-item grid-header">Peso</div>
 <div class="grid-item grid-header">Nota</div>

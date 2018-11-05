@@ -1,3 +1,6 @@
+# TODO:
+1. Separar todo list del main script y el markup inicial
+
 # Custom elements:
 
 1. crear una clase que extienda HTMLElement
