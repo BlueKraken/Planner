@@ -1,3 +1,5 @@
+// TODO: wire markup
+
 /**
  * Todo list
  */
@@ -89,5 +91,19 @@ const onEditClick = (key) => {
 const initialize = () => {
   renderList();
 }
+
+const markup = `
+<div id="todo-list-container">
+  <label for="item-name">Nombre</label>
+      
+  <input id="new-todo-input" type="text" name="item-name" onkeyup="handleNameInputChange()">
+  
+  <button onclick="onAddTodoClick()">Add</button>
+  
+  <ul id="todo-list"></ul>
+  
+  <button onclick="onDeleteSelectedClick()">Delete selected</button>
+</div>
+`
 
 document.addEventListener('DOMContentLoaded', initialize)
