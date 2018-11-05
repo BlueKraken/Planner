@@ -73,7 +73,7 @@ class NotebookController {
     init() {
         // <link href="main.css" rel="stylesheet"></link>
         const styleRef = document.createElement('link');
-        styleRef.setAttribute('href', 'califications.css');
+        styleRef.setAttribute('href', 'notebook-component/califications.css');
         styleRef.setAttribute('rel', 'stylesheet');
 
         this.parentContainer = document.createElement('div');
