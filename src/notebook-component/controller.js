@@ -86,7 +86,7 @@ class NotebookController {
         this.renderCalifications();
     }
 
-    destroy() {
+    removeFromMarkup() {
         document.head.querySelector('[href="califications.css"]').remove();
         this.parentContainer.remove();
     }
