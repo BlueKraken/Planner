@@ -12,32 +12,38 @@ class NotebookController {
     setExamScore(event) {
         this.notebook.exam.score = event.target.value * 1;
         this.renderTotalScore();
+        this.saveNotebook();
     }
 
     setExamWeight(event) {
         this.notebook.exam.weight = event.target.value * 1;
         this.renderTotalScore();
+        this.saveNotebook();
     }
 
     addCalification() {
         this.notebook.califications.push(new Calification());
         this.renderCalifications();
+        this.saveNotebook();
     }
 
     changeCalificationWeight(key, value) {
         this.notebook.califications[key].weight = value * 1;
         this.renderTotals();
+        this.saveNotebook();
     }
 
     changeCalificationScore(key, value) {
         this.notebook.califications[key].score = value * 1;
         this.renderTotals();
+        this.saveNotebook();
     }
 
     deleteCalification(key) {
         this.notebook.califications.splice(key, 1);
         this.renderCalifications();
         this.renderTotals();
+        this.saveNotebook();
     }
 
     renderCalifications() {  
@@ -68,6 +74,10 @@ class NotebookController {
     renderPresentationScore() {
         this.parentContainer.querySelector('#presentation-score').innerText = 
         this.notebook.presentation.score.toFixed(3);
+    }
+
+    saveNotebook() {
+        localStorage.setItem('notebook', JSON.stringify(this.notebook));
     }
 
     init() {

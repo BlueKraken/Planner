@@ -1,10 +1,7 @@
 import { controller } from './controller.js';
-import { Notebook } from './notebook.js';
 import { Calification } from './calification.js';
 
 const notebookData = JSON.parse(localStorage.getItem('notebook'));
-
-console.log(notebookData);
 
 if (notebookData) {   
     if (Array.isArray(notebookData.califications)) {
