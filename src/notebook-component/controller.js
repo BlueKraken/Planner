@@ -142,13 +142,13 @@ const markup = () => html`
 
 <p>Nota presentación: 
     <small id='presentation-score'>
-        ${controller.notebook.presentation.score}
+        ${controller.notebook.presentation.score.toFixed(3)}
     </small>
 </p>
 
 <p>Nota final: 
     <small id='total-score'>
-        ${controller.notebook.totalScore}
+        ${controller.notebook.totalScore.toFixed(3)}
     </small>
 </p>
 `
