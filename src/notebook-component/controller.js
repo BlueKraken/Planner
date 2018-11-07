@@ -54,11 +54,10 @@ class NotebookController {
         .querySelectorAll(':not(.grid-header)')
         .forEach(e => e.remove());
         
-        this.notebook.califications.forEach((_c, i) => {
-            calificationRow(i).forEach(col => {
-                calificationsGridContainer.appendChild(col);
-            });
-        });
+        const calificationRows = this.notebook.califications
+            .flatMap(generateCalificationRow);
+
+        calificationsGridContainer.append(...calificationRows);
     }
 
     renderTotals() {
@@ -81,14 +80,9 @@ class NotebookController {
     }
 
     init() {
-        const styleRef = document.createElement('link');
-        styleRef.setAttribute('href', 'notebook-component/notebook.css');
-        styleRef.setAttribute('rel', 'stylesheet');
-
         this.parentContainer = document.createElement('div');
         this.parentContainer.id = 'califications-container';
 
-        document.head.appendChild(styleRef);
 
         document.body.appendChild(this.parentContainer);
         render(markup(), this.parentContainer);
@@ -113,6 +107,7 @@ const gridHeader = html`
 `
 
 const markup = () => html`
+<link href="notebook-component/notebook.css" rel="stylesheet">
 <button @click="${controller.addCalification.bind(controller)}">
     Agregar nota
 </button>
@@ -121,33 +116,36 @@ const markup = () => html`
     ${gridHeader}
 </div>
 
-<div class="block">
-    <label for="exam-weight">Peso examen</label>
-    <input 
-        type="number"
-        min="0" 
-        name="exam-weigth" 
-        max="100"
-        value="${controller.notebook.exam.weight}" 
-        @input="${controller.setExamWeight.bind(controller)}"> 
-</div>
-
-<div class="block">
-    <label for="exam-score">Nota examen</label>
-    <input 
-        type="number" 
-        min="0"
-        max="7" 
-        name="exam-score" 
-        value="${controller.notebook.exam.score}"
-        step="0.1" 
-        @input="${controller.setExamScore.bind(controller)}">
-</div>
-    
 <p>Nota presentación: 
     <small id='presentation-score'>
         ${controller.notebook.presentation.score.toFixed(3)}
     </small>
+</p>
+
+<!-- TODO: change p to a more expresive tag? -->
+<p>
+    <div class="block">
+        <label for="exam-weight">Peso examen</label>
+        <input 
+            type="number"
+            min="0" 
+            name="exam-weigth" 
+            max="100"
+            value="${controller.notebook.exam.weight}" 
+            @input="${controller.setExamWeight.bind(controller)}"> 
+    </div>
+
+    <div class="block">
+        <label for="exam-score">Nota examen</label>
+        <input 
+            type="number" 
+            min="0"
+            max="7" 
+            name="exam-score" 
+            value="${controller.notebook.exam.score}"
+            step="0.1" 
+            @input="${controller.setExamScore.bind(controller)}">
+    </div>
 </p>
 
 <p>Nota final: 
@@ -157,9 +155,7 @@ const markup = () => html`
 </p>
 `
 
-const calificationRow = key => {
-    const calification = controller.notebook.califications[key];
-    
+const generateCalificationRow = (calification, key) => {    
     const weightInputEl = document.createElement('input');
     weightInputEl.classList.add('grid-item');
     weightInputEl.setAttribute('type', 'number');

@@ -1,6 +1,7 @@
 #califications-container .grid-container {
     display: grid;
     grid-template-columns: max-content max-content max-content;
+    margin: 10 0;
 }
 
 #califications-container input[type="number"] {
