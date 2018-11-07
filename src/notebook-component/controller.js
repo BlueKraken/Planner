@@ -121,25 +121,29 @@ const markup = () => html`
     ${gridHeader}
 </div>
 
-<label for="exam-weight">Peso examen</label>
-<input 
-    type="number"
-    min="0" 
-    name="exam-weigth" 
-    max="100"
-    value="${controller.notebook.exam.weight}" 
-    @input="${controller.setExamWeight.bind(controller)}"> 
+<div class="block">
+    <label for="exam-weight">Peso examen</label>
+    <input 
+        type="number"
+        min="0" 
+        name="exam-weigth" 
+        max="100"
+        value="${controller.notebook.exam.weight}" 
+        @input="${controller.setExamWeight.bind(controller)}"> 
+</div>
 
-<label for="exam-score">Nota examen</label>
-<input 
-    type="number" 
-    min="0"
-    max="7" 
-    name="exam-score" 
-    value="${controller.notebook.exam.score}"
-    step="0.1" 
-    @input="${controller.setExamScore.bind(controller)}">
-
+<div class="block">
+    <label for="exam-score">Nota examen</label>
+    <input 
+        type="number" 
+        min="0"
+        max="7" 
+        name="exam-score" 
+        value="${controller.notebook.exam.score}"
+        step="0.1" 
+        @input="${controller.setExamScore.bind(controller)}">
+</div>
+    
 <p>Nota presentación: 
     <small id='presentation-score'>
         ${controller.notebook.presentation.score.toFixed(3)}
@@ -180,7 +184,7 @@ const calificationRow = key => {
     const deleteButtonEl = document.createElement('button');
     deleteButtonEl.classList.add('grid-item');
     deleteButtonEl.textContent = 'Eliminar';
-    deleteButtonEl.onclick = controller.deleteCalification.bind(controller)
+    deleteButtonEl.onclick = controller.deleteCalification.bind(controller, key)
     
     return [
         weightInputEl,
