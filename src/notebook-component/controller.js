@@ -87,7 +87,7 @@ class NotebookController {
 
 
         document.body.appendChild(this.parentContainer);
-        render(markup(), this.parentContainer);
+        render(markup(this.notebook), this.parentContainer);
         this.renderCalifications();
     }
 
@@ -100,6 +100,7 @@ class NotebookController {
         removeEventListener(calificationEventTypes.calificationWeightChanged);
         removeEventListener(calificationEventTypes.examScoreChanged);
         removeEventListener(calificationEventTypes.examWeightChanged);
+        removeEventListener(calificationEventTypes.calificationAdded);
     }
 
     subscribeToEvents() {
@@ -127,6 +128,10 @@ class NotebookController {
             const { value } = handleCustomEvent(e);
             this.setExamWeight(value);
         });
+
+        addEventListener(calificationEventTypes.calificationAdded, e => {
+            this.addCalification();
+        });
     }
 }
 
@@ -141,9 +146,9 @@ const gridHeader = html`
 <div class="grid-header">Opciones</div>
 `
 
-const markup = () => html`
+const markup = (notebookState) => html`
 <link href="notebook-component/notebook.css" rel="stylesheet">
-<button @click="${controller.addCalification.bind(controller)}">
+<button @click="${dispatchCalificationAdded}">
     Agregar nota
 </button>
 
@@ -153,7 +158,7 @@ const markup = () => html`
 
 <p>Nota presentación: 
     <small id='presentation-score'>
-        ${controller.notebook.presentation.score.toFixed(3)}
+        ${notebookState.presentation.score.toFixed(3)}
     </small>
 </p>
 
@@ -164,7 +169,7 @@ const markup = () => html`
         min="0" 
         name="exam-weigth" 
         max="100"
-        value="${controller.notebook.exam.weight}" 
+        value="${notebookState.exam.weight}" 
         @input="${dispatchExamWeightChanged}"> 
 
     <label for="exam-score">Nota examen:</label>
@@ -173,14 +178,14 @@ const markup = () => html`
         min="0"
         max="7" 
         name="exam-score" 
-        value="${controller.notebook.exam.score}"
+        value="${notebookState.exam.score}"
         step="0.1" 
         @input="${dispatchExamScoreChanged}">
 </div>
 
 <p>Nota final: 
     <small id='total-score'>
-        ${controller.notebook.totalScore.toFixed(3)}
+        ${notebookState.totalScore.toFixed(3)}
     </small>
 </p>
 `
@@ -234,7 +239,7 @@ const calificationEventTypes = {
     calificationDeleted: 'calificationDeleted',
     examWeightChanged: 'examWeightChanged',
     examScoreChanged: 'examScoreChanged',
-    
+    calificationAdded: 'calificationAdded'
 }
 
 function dispatchExamWeightChanged(event) {
@@ -249,6 +254,10 @@ function dispatchExamScoreChanged(event) {
         calificationEventTypes.examScoreChanged,
         { detail: { value: event.target.value }}
     ));
+}
+
+function dispatchCalificationAdded(event) {
+    dispatchEvent(new CustomEvent(calificationEventTypes.calificationAdded));
 }
 
 //TODO: move to utils.js or something
