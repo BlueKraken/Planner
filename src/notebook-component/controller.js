@@ -80,6 +80,8 @@ class NotebookController {
     }
 
     init() {
+        this.subscribeToEvents();
+        
         this.parentContainer = document.createElement('div');
         this.parentContainer.id = 'califications-container';
 
@@ -92,6 +94,27 @@ class NotebookController {
     removeFromMarkup() {
         document.head.querySelector('[href="califications.css"]').remove();
         this.parentContainer.remove();
+
+        removeEventListener(eventTypes.deleteCalification);
+        removeEventListener(eventTypes.calificationScoreChanged);
+        removeEventListener(eventTypes.calificationWeightChanged);
+    }
+
+    subscribeToEvents() {
+        addEventListener(eventTypes.calificationDeleted, e => {
+            const key = handleCustomEvent(e).key;
+            controller.deleteCalification(key)
+        });
+
+        addEventListener(eventTypes.calificationScoreChanged, e => {
+            const { key, value } = handleCustomEvent(e);
+            controller.changeCalificationScore(key, value);
+        });
+
+        addEventListener(eventTypes.calificationWeightChanged, e => {
+            const { key, value } = handleCustomEvent(e);
+            controller.changeCalificationWeight(key, value);
+        });
     }
 }
 
@@ -156,9 +179,14 @@ const generateCalificationRow = (calification, key) => {
     weightInputEl.setAttribute('min', '0');
     weightInputEl.setAttribute('max', '100');
     weightInputEl.setAttribute('value', calification.weight);
-    weightInputEl.addEventListener('input', _ => {
-        controller.changeCalificationWeight(key, weightInputEl.value);
-    });
+    weightInputEl.addEventListener('input', () =>
+        dispatchEvent(new CustomEvent(
+            eventTypes.calificationWeightChanged, {
+                detail: {
+                    key, 
+                    value: weightInputEl.value
+            }
+        })));
     
     const scoreInputEl = document.createElement('input');
     scoreInputEl.setAttribute('type', 'number');
@@ -166,17 +194,36 @@ const generateCalificationRow = (calification, key) => {
     scoreInputEl.setAttribute('max', '7');
     scoreInputEl.setAttribute('step', '0.1');
     scoreInputEl.setAttribute('value', calification.score);
-    scoreInputEl.addEventListener('input', _ => {
-        controller.changeCalificationScore(key, scoreInputEl.value);
-    });
+    scoreInputEl.addEventListener('input', () =>
+        dispatchEvent(new CustomEvent(
+            eventTypes.calificationScoreChanged, {
+                detail: {
+                    key, 
+                    value: scoreInputEl.value
+            }
+        })));
     
     const deleteButtonEl = document.createElement('button');
     deleteButtonEl.textContent = 'Eliminar';
-    deleteButtonEl.onclick = controller.deleteCalification.bind(controller, key)
+    deleteButtonEl.onclick = () => dispatchEvent(new CustomEvent(
+        eventTypes.calificationDeleted, { detail: { key } } ));
     
     return [
         weightInputEl,
         scoreInputEl,
         deleteButtonEl,
     ];
+}
+
+const eventTypes = {
+    calificationWeightChanged: 'calificationWeightChanged',
+    calificationScoreChanged: 'calificationScoreChanged',
+    calificationDeleted: 'calificationDeleted',
+}
+
+//TODO: move to utils.js or something
+/** Returns the detail of a custom event */
+function handleCustomEvent(customEvent) {
+    // new CustomEvent(type, { details: { ... }})
+    return customEvent.detail;
 }
