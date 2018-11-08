@@ -12,3 +12,7 @@
     display: grid;
     grid-template-columns: max-content max-content;
 }
+
+#califications-container #exam-grid > label {
+    margin: 0 10 0 0;
+}

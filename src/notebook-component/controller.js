@@ -123,7 +123,7 @@ const markup = () => html`
 </p>
 
 <div id="exam-grid">
-    <label for="exam-weight">Peso examen</label>
+    <label for="exam-weight">Peso examen:</label>
     <input 
         type="number"
         min="0" 
@@ -132,7 +132,7 @@ const markup = () => html`
         value="${controller.notebook.exam.weight}" 
         @input="${controller.setExamWeight.bind(controller)}"> 
 
-    <label for="exam-score">Nota examen</label>
+    <label for="exam-score">Nota examen:</label>
     <input 
         type="number" 
         min="0"
@@ -152,7 +152,6 @@ const markup = () => html`
 
 const generateCalificationRow = (calification, key) => {    
     const weightInputEl = document.createElement('input');
-    // weightInputEl.classList.add('grid-item');
     weightInputEl.setAttribute('type', 'number');
     weightInputEl.setAttribute('min', '0');
     weightInputEl.setAttribute('max', '100');
@@ -162,7 +161,6 @@ const generateCalificationRow = (calification, key) => {
     });
     
     const scoreInputEl = document.createElement('input');
-    // scoreInputEl.classList.add('grid-item');
     scoreInputEl.setAttribute('type', 'number');
     scoreInputEl.setAttribute('min', '0');
     scoreInputEl.setAttribute('max', '7');
@@ -173,7 +171,6 @@ const generateCalificationRow = (calification, key) => {
     });
     
     const deleteButtonEl = document.createElement('button');
-    // deleteButtonEl.classList.add('grid-item');
     deleteButtonEl.textContent = 'Eliminar';
     deleteButtonEl.onclick = controller.deleteCalification.bind(controller, key)
     
