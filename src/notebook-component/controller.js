@@ -48,7 +48,7 @@ class NotebookController {
 
     renderCalifications() {  
         const calificationsGridContainer = this.parentContainer
-        .querySelector('.grid-container');
+        .querySelector('#califications-grid');
         
         calificationsGridContainer
         .querySelectorAll(':not(.grid-header)')
@@ -101,9 +101,9 @@ export const controller = new NotebookController();
 // Markup and html elements
 // TODO: extract to file
 const gridHeader = html`
-<div class="grid-item grid-header">Peso</div>
-<div class="grid-item grid-header">Nota</div>
-<div class="grid-item grid-header">Opciones</div>
+<div class="grid-header">Peso</div>
+<div class="grid-header">Nota</div>
+<div class="grid-header">Opciones</div>
 `
 
 const markup = () => html`
@@ -112,7 +112,7 @@ const markup = () => html`
     Agregar nota
 </button>
 
-<div class="grid-container">
+<div id="califications-grid">
     ${gridHeader}
 </div>
 
@@ -122,31 +122,26 @@ const markup = () => html`
     </small>
 </p>
 
-<!-- TODO: change p to a more expresive tag? -->
-<p>
-    <div class="block">
-        <label for="exam-weight">Peso examen</label>
-        <input 
-            type="number"
-            min="0" 
-            name="exam-weigth" 
-            max="100"
-            value="${controller.notebook.exam.weight}" 
-            @input="${controller.setExamWeight.bind(controller)}"> 
-    </div>
+<div id="exam-grid">
+    <label for="exam-weight">Peso examen</label>
+    <input 
+        type="number"
+        min="0" 
+        name="exam-weigth" 
+        max="100"
+        value="${controller.notebook.exam.weight}" 
+        @input="${controller.setExamWeight.bind(controller)}"> 
 
-    <div class="block">
-        <label for="exam-score">Nota examen</label>
-        <input 
-            type="number" 
-            min="0"
-            max="7" 
-            name="exam-score" 
-            value="${controller.notebook.exam.score}"
-            step="0.1" 
-            @input="${controller.setExamScore.bind(controller)}">
-    </div>
-</p>
+    <label for="exam-score">Nota examen</label>
+    <input 
+        type="number" 
+        min="0"
+        max="7" 
+        name="exam-score" 
+        value="${controller.notebook.exam.score}"
+        step="0.1" 
+        @input="${controller.setExamScore.bind(controller)}">
+</div>
 
 <p>Nota final: 
     <small id='total-score'>
@@ -157,7 +152,7 @@ const markup = () => html`
 
 const generateCalificationRow = (calification, key) => {    
     const weightInputEl = document.createElement('input');
-    weightInputEl.classList.add('grid-item');
+    // weightInputEl.classList.add('grid-item');
     weightInputEl.setAttribute('type', 'number');
     weightInputEl.setAttribute('min', '0');
     weightInputEl.setAttribute('max', '100');
@@ -167,7 +162,7 @@ const generateCalificationRow = (calification, key) => {
     });
     
     const scoreInputEl = document.createElement('input');
-    scoreInputEl.classList.add('grid-item');
+    // scoreInputEl.classList.add('grid-item');
     scoreInputEl.setAttribute('type', 'number');
     scoreInputEl.setAttribute('min', '0');
     scoreInputEl.setAttribute('max', '7');
@@ -178,7 +173,7 @@ const generateCalificationRow = (calification, key) => {
     });
     
     const deleteButtonEl = document.createElement('button');
-    deleteButtonEl.classList.add('grid-item');
+    // deleteButtonEl.classList.add('grid-item');
     deleteButtonEl.textContent = 'Eliminar';
     deleteButtonEl.onclick = controller.deleteCalification.bind(controller, key)
     

@@ -1,4 +1,4 @@
-#califications-container .grid-container {
+#califications-container #califications-grid {
     display: grid;
     grid-template-columns: max-content max-content max-content;
     margin: 10 0;
@@ -6,4 +6,9 @@
 
 #califications-container input[type="number"] {
     width: 40;
+}
+
+#califications-container #exam-grid {
+    display: grid;
+    grid-template-columns: max-content max-content;
 }
