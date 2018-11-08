@@ -9,14 +9,14 @@ class NotebookController {
             '#califications-container');
     }
 
-    setExamScore(event) {
-        this.notebook.exam.score = event.target.value * 1;
+    setExamScore(value) {
+        this.notebook.exam.score = value * 1;
         this.renderTotalScore();
         this.saveNotebook();
     }
 
-    setExamWeight(event) {
-        this.notebook.exam.weight = event.target.value * 1;
+    setExamWeight(value) {
+        this.notebook.exam.weight = value * 1;
         this.renderTotalScore();
         this.saveNotebook();
     }
@@ -95,25 +95,37 @@ class NotebookController {
         document.head.querySelector('[href="califications.css"]').remove();
         this.parentContainer.remove();
 
-        removeEventListener(eventTypes.deleteCalification);
-        removeEventListener(eventTypes.calificationScoreChanged);
-        removeEventListener(eventTypes.calificationWeightChanged);
+        removeEventListener(calificationEventTypes.deleteCalification);
+        removeEventListener(calificationEventTypes.calificationScoreChanged);
+        removeEventListener(calificationEventTypes.calificationWeightChanged);
+        removeEventListener(calificationEventTypes.examScoreChanged);
+        removeEventListener(calificationEventTypes.examWeightChanged);
     }
 
     subscribeToEvents() {
-        addEventListener(eventTypes.calificationDeleted, e => {
+        addEventListener(calificationEventTypes.calificationDeleted, e => {
             const key = handleCustomEvent(e).key;
-            controller.deleteCalification(key)
+            this.deleteCalification(key)
         });
 
-        addEventListener(eventTypes.calificationScoreChanged, e => {
+        addEventListener(calificationEventTypes.calificationScoreChanged, e => {
             const { key, value } = handleCustomEvent(e);
-            controller.changeCalificationScore(key, value);
+            this.changeCalificationScore(key, value);
         });
 
-        addEventListener(eventTypes.calificationWeightChanged, e => {
+        addEventListener(calificationEventTypes.calificationWeightChanged, e => {
             const { key, value } = handleCustomEvent(e);
-            controller.changeCalificationWeight(key, value);
+            this.changeCalificationWeight(key, value);
+        });
+
+        addEventListener(calificationEventTypes.examScoreChanged, e => {
+            const { value } = handleCustomEvent(e);
+            this.setExamScore(value);
+        });
+
+        addEventListener(calificationEventTypes.examWeightChanged, e => {
+            const { value } = handleCustomEvent(e);
+            this.setExamWeight(value);
         });
     }
 }
@@ -153,7 +165,7 @@ const markup = () => html`
         name="exam-weigth" 
         max="100"
         value="${controller.notebook.exam.weight}" 
-        @input="${controller.setExamWeight.bind(controller)}"> 
+        @input="${dispatchExamWeightChanged}"> 
 
     <label for="exam-score">Nota examen:</label>
     <input 
@@ -163,7 +175,7 @@ const markup = () => html`
         name="exam-score" 
         value="${controller.notebook.exam.score}"
         step="0.1" 
-        @input="${controller.setExamScore.bind(controller)}">
+        @input="${dispatchExamScoreChanged}">
 </div>
 
 <p>Nota final: 
@@ -179,12 +191,12 @@ const generateCalificationRow = (calification, key) => {
     weightInputEl.setAttribute('min', '0');
     weightInputEl.setAttribute('max', '100');
     weightInputEl.setAttribute('value', calification.weight);
-    weightInputEl.addEventListener('input', () =>
+    weightInputEl.addEventListener('input', e => 
         dispatchEvent(new CustomEvent(
-            eventTypes.calificationWeightChanged, {
+            calificationEventTypes.calificationWeightChanged, {
                 detail: {
                     key, 
-                    value: weightInputEl.value
+                    value: e.target.value
             }
         })));
     
@@ -194,19 +206,20 @@ const generateCalificationRow = (calification, key) => {
     scoreInputEl.setAttribute('max', '7');
     scoreInputEl.setAttribute('step', '0.1');
     scoreInputEl.setAttribute('value', calification.score);
-    scoreInputEl.addEventListener('input', () =>
+    scoreInputEl.addEventListener('input', e =>
         dispatchEvent(new CustomEvent(
-            eventTypes.calificationScoreChanged, {
+            calificationEventTypes.calificationScoreChanged, {
                 detail: {
                     key, 
-                    value: scoreInputEl.value
+                    value: e.target.value
             }
         })));
     
     const deleteButtonEl = document.createElement('button');
     deleteButtonEl.textContent = 'Eliminar';
     deleteButtonEl.onclick = () => dispatchEvent(new CustomEvent(
-        eventTypes.calificationDeleted, { detail: { key } } ));
+        calificationEventTypes.calificationDeleted, 
+        { detail: { key } } ));
     
     return [
         weightInputEl,
@@ -215,10 +228,27 @@ const generateCalificationRow = (calification, key) => {
     ];
 }
 
-const eventTypes = {
+const calificationEventTypes = {
     calificationWeightChanged: 'calificationWeightChanged',
     calificationScoreChanged: 'calificationScoreChanged',
     calificationDeleted: 'calificationDeleted',
+    examWeightChanged: 'examWeightChanged',
+    examScoreChanged: 'examScoreChanged',
+    
+}
+
+function dispatchExamWeightChanged(event) {
+    dispatchEvent(new CustomEvent(
+        calificationEventTypes.examWeightChanged,
+        { detail: { value: event.target.value } }
+    ));
+}
+
+function dispatchExamScoreChanged(event) {
+    dispatchEvent(new CustomEvent(
+        calificationEventTypes.examScoreChanged,
+        { detail: { value: event.target.value }}
+    ));
 }
 
 //TODO: move to utils.js or something
